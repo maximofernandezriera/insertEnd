@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista enlazada simple: insertEnd(E info)</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reset.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/white.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/monokai.css" />
+
+    <style>
+      .reveal .cols {
+        display: flex;
+        gap: 2.5rem;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .reveal .col {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .reveal .small {
+        font-size: 0.75em;
+        opacity: 0.9;
+      }
+
+      .reveal pre {
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h2>Lista enlazada simple</h2>
+          <h3>Inserción al final: <code>insertEnd</code></h3>
+          <p class="small">Implementación y razonamiento (caso lista vacía vs. no vacía)</p>
+        </section>
+
+        <section>
+          <h2>Propósito del ejercicio</h2>
+          <p>Extender una lista enlazada simple para insertar también al final.</p>
+          <h3>Dos escenarios</h3>
+          <ul>
+            <li>Lista vacía: el nodo nuevo pasa a ser el primero.</li>
+            <li>Lista no vacía: se recorre hasta el último nodo y se enlaza allí.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Modelo mental</h2>
+          <div class="cols">
+            <div class="col">
+              <h3>Nodo</h3>
+              <ul>
+                <li><code>info</code>: dato genérico <code>E</code></li>
+                <li><code>next</code>: referencia al sucesor o <code>null</code></li>
+              </ul>
+            </div>
+            <div class="col">
+              <h3>Lista</h3>
+              <ul>
+                <li><code>head</code>: primer nodo</li>
+                <li>Vacía si <code>head == null</code></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Invariantes</h2>
+          <ul>
+            <li>Vacía si y solo si <code>head == null</code>.</li>
+            <li>Si no está vacía, <code>head</code> apunta a un nodo válido.</li>
+            <li>Último nodo: aquel con <code>next == null</code>.</li>
+            <li><code>size</code> se incrementa una vez por inserción exitosa.</li>
+          </ul>
+          <p class="small">Con estos invariantes, imprimir es recorrer desde <code>head</code> hasta <code>null</code>.</p>
+        </section>
+
+        <section>
+          <h2><code>insertEnd</code>: idea central</h2>
+          <p>Insertar al final exige ser metódico con las referencias:</p>
+          <ul>
+            <li>Crear el nodo con el <code>info</code> recibido.</li>
+            <li>Decidir dónde enlazarlo (según el estado de la lista).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Caso A: lista vacía</h2>
+          <p>Si <code>head == null</code>, no existe “último nodo” que buscar.</p>
+          <pre><code class="language-java">Node&lt;E&gt; node = new Node&lt;&gt;(info);
+
+if (head == null) {
+    head = node;
+    size++;
+    return;
+}</code></pre>
+          <p class="small">El nuevo nodo es, a la vez, primero y último.</p>
+        </section>
+
+        <section>
+          <h2>Caso B: lista no vacía</h2>
+          <p>Se localiza el último nodo mediante un recorrido lineal:</p>
+          <ul>
+            <li>Partir de <code>head</code>.</li>
+            <li>Avanzar mientras <code>current.next != null</code>.</li>
+            <li>Al terminar: <code>current</code> es el último.</li>
+            <li>Enlace final: <code>current.next = node</code> y <code>size++</code>.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Coste computacional</h2>
+          <ul>
+            <li><strong>Tiempo</strong>: <code>O(n)</code> (hay que llegar al final).</li>
+            <li><strong>Espacio extra</strong>: <code>O(1)</code>.</li>
+          </ul>
+          <p class="small">Si existiera un puntero <code>tail</code>, <code>insertEnd</code> podría ser <code>O(1)</code>. Aquí se practica el recorrido y el criterio de parada.</p>
+        </section>
+
+        <section>
+          <h2>Cierre</h2>
+          <p>La clave no es “insertar”, sino <strong>conservar la coherencia de enlaces</strong> en los dos estados posibles de la lista.</p>
+          <p class="small">Resultado: inserción al final correcta sin puntero <code>tail</code>, apoyada en invariantes claros.</p>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/highlight.js"></script>
+
+    <script>
+      Reveal.initialize({
+        hash: true,
+        slideNumber: true,
+        plugins: [RevealHighlight]
+      });
+    </script>
+  </body>
+</html>
